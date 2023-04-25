@@ -1,4 +1,5 @@
 #pragma once
+#include <string>
 
 class Coordinate {
 public:
@@ -16,6 +17,8 @@ public:
 	Coordinate operator+=(const Coordinate operand);
 	Coordinate operator-=(const Coordinate operand);
 	Coordinate operator*=(const double operand);
+
+	std::string to_str();
 };
 
 using Coord = Coordinate;
@@ -30,4 +33,10 @@ public:
 
 	double direction;
 	Coordinate position;
+
+	bool LayerChanged(void* layer);
+	void* GetPreviousLayer();
+
+private:
+	void* previous_layer;
 };

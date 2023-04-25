@@ -3,7 +3,7 @@
 #include <Config.h>
 
 void Log::PrintDebugLog(string class_name, string function_name, string log) {
-#if not Release	
+#if Debug	
 	cout << "[Debug LOG] " + class_name + "::" + function_name + "(...)" + " - " + log << endl;
 #endif
 }

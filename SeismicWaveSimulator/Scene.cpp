@@ -20,13 +20,13 @@ Scene::~Scene() {
     //TODO : Destroy Data
 }
 
-int Scene::RegisterRenderer(SDL_Renderer* ren) {
-    this->ren = ren;
+int Scene::SetWindow(Window* win) {
+    this->win = win;
     return 0;
 }
 
-int Scene::PushEvent(EventType type, SDL_Keycode key) {
-    this->event_queue.push({ type, key });
+int Scene::PushEvent(Event::Event evt) {
+    this->event_queue.push(evt);
     return 0;
 }
 

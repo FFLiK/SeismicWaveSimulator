@@ -4,6 +4,8 @@
 #include <vector>
 #include <Coordinate.h>
 #include <Layer.h>
+#include <Window.h>
+#include <memory>
 using namespace std;
 
 
@@ -14,12 +16,11 @@ public:
 
 	int OccurEarthquake(Coordinate hypocenter);
 
-	int Update();
-	int Rendering(SDL_Renderer* ren, double zoom);
+	int Update(double velocity = 1.0);
+	int Rendering(Window* win, double zoom);
 
 private:
 	LayerSet* layer_set;
-
-	vector<Point> p_wave;
-	vector<Point> s_wave;
+	shared_ptr<vector<Point>> p_wave;
+	shared_ptr<vector<Point>> s_wave;
 };

@@ -3,11 +3,15 @@
 #include <vector>
 #include <json/json.h>
 #include <Coordinate.h>
+#include <Window.h>
 using namespace std;
 
 
 class Layer {
 public:
+	Layer();
+	Layer(const Layer& layer);
+
 	double bulk_modulus, shear_modulus, density;
 	double top_depth, bottom_depth;
 
@@ -21,7 +25,7 @@ private:
 
 public:
 	LayerSet(Json::Value &config);
-	Layer operator[](Coordinate pos);
+	Layer* operator[](Coordinate pos);
 
-	int Rendering(SDL_Renderer* ren, double zoom);
+	int Rendering(Window* win, double zoom);
 };

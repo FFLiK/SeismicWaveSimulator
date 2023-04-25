@@ -30,7 +30,7 @@ std::string FileManager::Location(FileMode f, std::string name, std::string pos)
 		break;
 	}
 
-	if (Release) {
+	if (!Debug) {
 		Log::PrintDebugLog("FileManager", "Location", "loc = " + (std::string)getenv("APPDATA") + "\\" + ProjectFolderName + "\\" + loc);
 		return (std::string)getenv("APPDATA") + "\\" + ProjectFolderName + "\\" + loc;
 	}
@@ -50,12 +50,13 @@ Json::Value FileManager::GetJsonFile(std::string location) {
 
 	if (bret == false) {
 		cout << "Error to parse JSON file !!!" << endl;
+		cout << "Details : " << errorMessage << endl;
 	}
 
 	return root;
 }
 
-std::string OpenFileName(FileType type) {
+std::string FileManager::OpenFile(FileType type) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 	OPENFILENAME OFN;
@@ -81,3 +82,4 @@ std::string OpenFileName(FileType type) {
 		str = CW2A(OFN.lpstrFile);
 	return str;
 }
+

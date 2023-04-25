@@ -4,7 +4,7 @@
 #define ProjectName "Seismic Wave Simulator"
 #define ProjectFolderName "SeismicWaveSimulator"
 
-#define Release false
+#define Debug true
 #define Version 1.0
 
 //==========================================

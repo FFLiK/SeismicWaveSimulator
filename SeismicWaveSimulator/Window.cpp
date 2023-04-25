@@ -1,6 +1,7 @@
 #include "Window.h"
 #include <ctime>
 #include <thread>
+#include <Scene.h>
 #include <Log.h>
 
 Window::Window(WindowData w_dat) {
@@ -57,7 +58,7 @@ int Window::AddScene(Scene* scene, int pos) {
 	if (find(this->scene_list.begin(), this->scene_list.end(), scene) != this->scene_list.end()) {
 		return 1;
 	}
-	scene->RegisterRenderer(this->ren);
+	scene->SetWindow(this);
 	if (pos == -1) {
 		this->scene_list.push_back(scene);
 	}
@@ -87,7 +88,7 @@ void Window::__RenderingProcess__() {
 			SDL_RenderClear(this->ren);
 			for (int i = this->scene_list.size() - 1; i >= 0; i--) {
 				this->scene_list[i]->Rendering();
-			} 
+			}
 			SDL_SetRenderDrawColor(this->ren, 0, 0, 0, 0);
 			SDL_RenderPresent(this->ren);
 			SDL_Delay(1000 / this->fps - 1);
@@ -96,22 +97,63 @@ void Window::__RenderingProcess__() {
 	this->rendering_completed = true;
 }
 
-EventType Window::PollEvent() {
+Event::EventType Window::PollEvent() {
 	SDL_WaitEvent(&this->evt);
 	switch (this->evt.type) {
 	case SDL_QUIT:
-		return QUIT;
+		return Event::QUIT;
 	case SDL_KEYDOWN:
-		this->scene_list.front()->PushEvent(KEY_DOWN, this->evt.key.keysym.sym);
-		return KEY_DOWN;
+		this->scene_list.front()->PushEvent(Event::Event(Event::KEY_DOWN, this->evt.key.keysym.sym));
+		return Event::KEY_DOWN;
 	case SDL_KEYUP:
-		this->scene_list.front()->PushEvent(KEY_UP, this->evt.key.keysym.sym);
-		return KEY_UP;
+		this->scene_list.front()->PushEvent(Event::Event(Event::KEY_UP, this->evt.key.keysym.sym));
+		return Event::KEY_UP;
+	case SDL_MOUSEBUTTONDOWN:
+		switch (this->evt.button.button) {
+		case SDL_BUTTON_LEFT:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_DONW, {Event::LEFT, this->evt.button.x, this->evt.button.y}));
+			break;
+		case SDL_BUTTON_RIGHT:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_DONW, { Event::RIGHT, this->evt.button.x, this->evt.button.y }));
+			break;
+		case SDL_BUTTON_MIDDLE:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_DONW, { Event::MIDDLE, this->evt.button.x, this->evt.button.y }));
+			break;
+		}
+		return Event::MOUSE_DONW;
+	case SDL_MOUSEBUTTONUP:
+		switch (this->evt.button.button) {
+		case SDL_BUTTON_LEFT:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_UP, { Event::LEFT, this->evt.button.x, this->evt.button.y }));
+			break;
+		case SDL_BUTTON_RIGHT:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_UP, { Event::RIGHT, this->evt.button.x, this->evt.button.y }));
+			break;
+		case SDL_BUTTON_MIDDLE:
+			this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_UP, { Event::MIDDLE, this->evt.button.x, this->evt.button.y }));
+			break;
+		}
+		return Event::MOUSE_UP;
+	case SDL_MOUSEWHEEL:
+		this->scene_list.front()->PushEvent(Event::Event(Event::MOUSE_WHEEL, this->evt.wheel.preciseY));
+		return Event::MOUSE_WHEEL;
 	default:
-		return NONE;
+		return Event::NONE;
 	}
 }
 
 int Window::RunTime() {
 	return clock() - this->program_started_time;
+}
+
+SDL_Renderer* Window::GetRenderer() const {
+	return this->ren;
+}
+
+Window::WindowData Window::GetWindowData() const {
+	WindowData d;
+	d.fps = this->fps;
+	d.title = SDL_GetWindowTitle(this->win);
+	SDL_GetWindowSize(this->win, &d.width, &d.height);
+    return d;
 }

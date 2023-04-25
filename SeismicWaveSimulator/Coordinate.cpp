@@ -2,6 +2,9 @@
 
 #include <Coordinate.h>
 #include <cmath>
+#include <string>
+#include <Log.h>
+using namespace std;
 
 Coordinate::Coordinate() {
     this->x = 0;
@@ -45,20 +48,40 @@ Coordinate Coordinate::operator*=(const double operand) {
     return *this;
 }
 
+std::string Coordinate::to_str() {
+	return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
+}
+
 Point::Point() {
-    this->direction = 0.0;
+	this->position.x = 0;
+	this->position.y = 0;
+	this->direction = 0;
+	this->previous_layer = nullptr;
 }
 
 Point::Point(double x, double y, double dir) {
     this->position = Coord(x, y);
     this->direction = dir;
+	this->previous_layer = nullptr;
 }
 
 Point::Point(Coordinate& pos, double dir) {
-    this->position = pos;
-    this->direction = dir;
+	this->position = pos;
+	this->direction = dir;
+	this->previous_layer = nullptr;
 }
 
 int Point::Move(double magnitude) {
     this->position += Coordinate(magnitude * cos(this->direction * M_PI), magnitude * sin(this->direction * M_PI));
+	return 0;
+}
+
+bool Point::LayerChanged(void* layer) {
+	void* p = this->previous_layer;
+	this->previous_layer = layer;
+	return (layer != p && p != nullptr);
+}
+
+void* Point::GetPreviousLayer() {
+	return this->previous_layer;
 }

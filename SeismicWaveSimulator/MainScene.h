@@ -11,10 +11,11 @@ public:
 	int Rendering();
 
 private:
-	int EventProcess(Event& evt);
+	int EventProcess(Event::Event& evt);
 	int NormalProcess();
 
-	Simulator* simulator;
+	Simulator* simulator = nullptr;
 	double zoom;
+	double velocity;
 };
 

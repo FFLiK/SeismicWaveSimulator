@@ -15,13 +15,13 @@ int main(int argc, char *argv[]) {
 	win->Rendering();
 
 	Scene* scene;
-	scene = new MainScene(path, 500);
+	scene = new MainScene(path, 1);
 	win->AddScene(scene, 0);
 
 	bool run = true;
 	while (run) {
 		switch (win->PollEvent()) {
-		case QUIT:
+		case Event::QUIT:
 			run = false;
 			break;
 		}

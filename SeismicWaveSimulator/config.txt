@@ -1,0 +1,15 @@
+{
+    "Layer" : [
+		{ "bulk_modulus" : 0, "shear_modulus" : 0, "density" : 0, "thickness" : 100 },
+        { "bulk_modulus" : 10, "shear_modulus" : 10, "density" : 100, "thickness" : 100 },
+        { "bulk_modulus" : 100, "shear_modulus" : 100, "density" : 200, "thickness" : 200 },
+        { "bulk_modulus" : 500, "shear_modulus" : 500, "density" : 300, "thickness" : 300 },
+        { "bulk_modulus" : 1000, "shear_modulus" : 1000, "density" : 400, "thickness" : 400 },
+        { "bulk_modulus" : 1500, "shear_modulus" : 1500, "density" : 500, "thickness" : 500 },
+        { "bulk_modulus" : 2000, "shear_modulus" : 2000, "density" : 600, "thickness" : 600 },
+        { "bulk_modulus" : 3000, "shear_modulus" : 3000, "density" : 700, "thickness" : 700 },
+        { "bulk_modulus" : 4500, "shear_modulus" : 4500, "density" : 800, "thickness" : 800 },
+        { "bulk_modulus" : 7000, "shear_modulus" : 7000, "density" : 900, "thickness" : 900 },
+        { "bulk_modulus" : 10000, "shear_modulus" : 10000, "density" : 1000, "thickness" : 1000 }
+    ]
+}

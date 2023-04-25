@@ -1,9 +1,11 @@
 #pragma once
 #include <SDL.h>
 #include <string>
-#include <Scene.h>
 #include <vector>
+#include <Event.h>
 using namespace std;
+
+class Scene;
 
 class Window {
 private:
@@ -18,7 +20,6 @@ private:
 	int program_started_time;
 
 	vector<Scene*> scene_list;
-
 
 public:
 	class WindowData {
@@ -38,8 +39,10 @@ public:
 	int DeleteScene(Scene *scene);
 	void __RenderingProcess__();
 	
-	EventType PollEvent();
+	Event::EventType PollEvent();
 
 	int RunTime();
-};
 
+	SDL_Renderer* GetRenderer() const;
+	WindowData GetWindowData() const;
+};
