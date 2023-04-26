@@ -26,6 +26,7 @@ using Coord = Coordinate;
 class Point {
 public:
 	Point();
+	Point(const Point& point);
 	Point(double x, double y, double dir);
 	Point(Coordinate& pos, double dir);
 	
@@ -36,7 +37,18 @@ public:
 
 	bool LayerChanged(void* layer);
 	void* GetPreviousLayer();
+	void SetTempLayer();
+
+	double GetIntensity();
+	void ManipulateIntensity(double coe);
 
 private:
 	void* previous_layer;
+	double intensity;
+	bool temp_layer;
+
+	double movement_cos;
+	double movement_sin;
+
+	double prev_direction;
 };

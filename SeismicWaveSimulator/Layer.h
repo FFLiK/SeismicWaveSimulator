@@ -17,6 +17,10 @@ public:
 
 	double PWaveVelocity();
 	double SWaveVelocity();
+
+private:
+	double p_wave_speed;
+	double s_wave_speed;
 };
 
 class LayerSet {

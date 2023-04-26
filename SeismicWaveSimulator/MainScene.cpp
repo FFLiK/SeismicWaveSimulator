@@ -47,6 +47,6 @@ int MainScene::EventProcess(Event::Event& evt) {
 }
 
 int MainScene::NormalProcess() {
-	if(this->simulator) this->simulator->Update(this->velocity);
+	if(this->simulator) this->simulator->Update((double)this->delta_time * velocity * 0.5);
 	return 0;
 }

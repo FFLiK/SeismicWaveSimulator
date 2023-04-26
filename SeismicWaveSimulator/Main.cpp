@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
 	win->Rendering();
 
 	Scene* scene;
-	scene = new MainScene(path, 1);
+	scene = new MainScene(path);
 	win->AddScene(scene, 0);
 
 	bool run = true;

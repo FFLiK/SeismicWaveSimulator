@@ -28,5 +28,9 @@ protected:
 	virtual int EventProcess(Event::Event &evt) abstract;
 	virtual int NormalProcess() abstract;
 
+	int delta_time = 0;
+
+private:
 	int update_delay;
+	int prev_update_time;
 };

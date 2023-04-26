@@ -16,7 +16,7 @@ public:
 
 	int OccurEarthquake(Coordinate hypocenter);
 
-	int Update(double velocity = 1.0);
+	int Update(double delta_time);
 	int Rendering(Window* win, double zoom);
 
 private:

@@ -9,6 +9,7 @@ Scene::Scene(int update_delay){
     this->run = true;
     this->process_completed = false;
     this->update_delay = update_delay;
+	this->prev_update_time = clock();
     thread th([&]() {this->__Process__();});
     th.detach();
 }
@@ -38,6 +39,8 @@ int Scene::__Process__() {
         }
         this->NormalProcess();
         SDL_Delay(update_delay);
+		this->delta_time = clock() - prev_update_time;
+		this->prev_update_time = clock();
     }
     this->process_completed = true;
     return 0;

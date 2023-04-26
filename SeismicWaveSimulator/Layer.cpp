@@ -2,7 +2,7 @@
 #include <Log.h>
 #include <ColorTable.h>
 
-Layer air_layer = Layer();
+#define AIR_LAYER Layer()
 
 Layer::Layer() {
 	this->bottom_depth = 0;
@@ -18,16 +18,20 @@ Layer::Layer(const Layer& layer) {
 	this->density = layer.density;
 	this->shear_modulus = layer.shear_modulus;
 	this->top_depth = layer.top_depth;
+
+	if (this->density == 0) this->p_wave_speed = 0;
+	else this->p_wave_speed = sqrt((this->bulk_modulus + 4.0 / 3.0 * this->shear_modulus) / this->density);
+	
+	if (this->density == 0) this->s_wave_speed;
+	this->s_wave_speed = sqrt(this->shear_modulus / this->density);
 }
 
 double Layer::PWaveVelocity() {
-	if (this->density == 0) return 0;
-    return sqrt((this->bulk_modulus + 4.0 / 3.0 * this->shear_modulus) / this->density);
+	return this->p_wave_speed;
 }
 
 double Layer::SWaveVelocity() {
-	if (this->density == 0) return 0;
-	return sqrt(this->shear_modulus / this->density);
+	return this->s_wave_speed;
 }
 
 LayerSet::LayerSet(Json::Value& config) {
@@ -48,7 +52,6 @@ LayerSet::LayerSet(Json::Value& config) {
                 lay.bottom_depth = prev_depth + config["Layer"][i]["thickness"].asDouble();
             }
             prev_depth = lay.bottom_depth;
-			Log::PrintDebugLog("LayerSet", "Constructor", to_string(prev_depth));
 			this->layers.push_back(lay);
         }
     }
@@ -63,7 +66,9 @@ Layer* LayerSet::operator[](Coordinate pos) {
             return &layers[i];
         }
     }
-    return &air_layer;
+	Layer air = AIR_LAYER;
+	
+    return &air;
 }
 
 int LayerSet::Rendering(Window* win, double zoom) {
