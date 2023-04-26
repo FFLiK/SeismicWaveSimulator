@@ -28,7 +28,7 @@ int Simulator::OccurEarthquake(Coordinate hypocenter) {
     for (int i = 0; i < SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER; i++) {
 		new_p_wave->push_back(Point(hypocenter, (double)i / (double)SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER * 2));
 	}
-	this->p_wave = new_p_wave;
+	atomic_store(&(this->p_wave), new_p_wave);
 	new_p_wave.reset();
     return 0;
 }
@@ -47,25 +47,25 @@ double SnellLaw(double theta, double v_in, double v_out) {
 }
 
 int Simulator::Update(double delta_time) {
-	if (this->p_wave) {
+	shared_ptr<vector<Point>> wave = this->p_wave;
+	if (wave) {
 		shared_ptr<vector<Point>> new_p_wave = make_shared<vector<Point>>();
-		for (register int i = 0; i < this->p_wave->size(); i++) {
-			Layer* layer = (*this->layer_set)[(*this->p_wave)[i].position];
-			if ((*this->p_wave)[i].position.x >= 0 && 
-				(*this->p_wave)[i].position.y >= 0 && 
-				(*this->p_wave)[i].GetIntensity() > INTENSITY_THRESHOLD /*&&
-				layer->PWaveVelocity() != 0*/) {
-				Layer* previous_layer = (Layer*)(*this->p_wave)[i].GetPreviousLayer();
-				if ((*this->p_wave)[i].LayerChanged(layer)) {
+		for (register int i = 0; i < wave->size(); i++) {
+			Layer* layer = (*this->layer_set)[(*wave)[i].position];
+			if ((*wave)[i].position.x >= 0 && 
+				(*wave)[i].position.y >= 0 && 
+				(*wave)[i].GetIntensity() > INTENSITY_THRESHOLD) {
+				Layer* previous_layer = (Layer*)(*wave)[i].GetPreviousLayer();
+				if ((*wave)[i].LayerChanged(layer)) {
 					//Refraction
 					double reflection_coefficient = abs((layer->PWaveVelocity() - previous_layer->PWaveVelocity()) / (layer->PWaveVelocity() + previous_layer->PWaveVelocity()));
-					Point new_wave = (*this->p_wave)[i];
+					Point new_wave = (*wave)[i];
 					new_wave.direction = SnellLaw(new_wave.direction, previous_layer->PWaveVelocity(), layer->PWaveVelocity());
 					new_wave.ManipulateIntensity(1 - reflection_coefficient);
 					new_p_wave->push_back(new_wave);
 
 					//Create Reflected Wave
-					Point reflected = (*this->p_wave)[i];
+					Point reflected = (*wave)[i];
 					reflected.direction = -reflected.direction + 2.0;
 					reflected.SetTempLayer();
 					reflected.ManipulateIntensity(reflection_coefficient);
@@ -81,7 +81,7 @@ int Simulator::Update(double delta_time) {
 					new_p_wave->push_back(reflected);
 				}
 				else {
-					new_p_wave->push_back((*this->p_wave)[i]);
+					new_p_wave->push_back((*wave)[i]);
 				}
 			}
 		}
@@ -106,7 +106,12 @@ int Simulator::Rendering(Window* win, double zoom) {
 			hsv.v = 80.0 * (*wave)[i].GetIntensity() + 20.0;
 			Color::RGB c(hsv);
 			SDL_SetRenderDrawColor(win->GetRenderer(), c.r, c.g, c.b, 255);
-			SDL_RenderDrawPointF(win->GetRenderer(), (*wave)[i].position.x * zoom, (*wave)[i].position.y * zoom);
+			SDL_FRect rect;
+			rect.x = (*wave)[i].position.x * zoom - 0.5;
+			rect.y = (*wave)[i].position.y * zoom - 0.5;
+			rect.w = 2.0;
+			rect.h = 2.0;
+			SDL_RenderDrawRectF(win->GetRenderer(), &rect);
 		}
 		//Log::PrintSystemLog("P Wave Particle Size = " + to_string(wave->size()));
 		wave.reset();
