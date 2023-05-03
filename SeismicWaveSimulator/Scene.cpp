@@ -37,10 +37,10 @@ int Scene::__Process__() {
             this->EventProcess(this->event_queue.front());
             this->event_queue.pop();
         }
-        this->NormalProcess();
-        SDL_Delay(update_delay);
 		this->delta_time = clock() - prev_update_time;
 		this->prev_update_time = clock();
+        this->NormalProcess();
+        SDL_Delay(update_delay);
     }
     this->process_completed = true;
     return 0;

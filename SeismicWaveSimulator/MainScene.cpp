@@ -38,7 +38,7 @@ int MainScene::EventProcess(Event::Event& evt) {
 		if (evt.keycode == SDLK_LEFT) {
 			this->velocity *= 0.9;
 		}
-		else {
+		else if(evt.keycode == SDLK_RIGHT) {
 			this->velocity *= 1.1;
 		}
 		break;

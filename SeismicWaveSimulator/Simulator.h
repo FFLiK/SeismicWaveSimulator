@@ -23,4 +23,9 @@ private:
 	LayerSet* layer_set;
 	shared_ptr<vector<Point>> p_wave;
 	shared_ptr<vector<Point>> s_wave;
+	shared_ptr<vector<Point>> p_refracted_wave;
+	shared_ptr<vector<Point>> s_refracted_wave;
+
+	void Calculate(int wavetype, double delta_time);
+	void RenderWave(int wavetype, Window* win, double zoom);
 };

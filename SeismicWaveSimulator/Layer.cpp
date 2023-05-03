@@ -61,14 +61,21 @@ LayerSet::LayerSet(Json::Value& config) {
 }
 
 Layer* LayerSet::operator[](Coordinate pos) {
-    for (int i = 0; i < this->layers.size(); i++) {
-        if (pos.y < this->layers[i].bottom_depth && pos.y >= this->layers[i].top_depth) {
-            return &layers[i];
-        }
-    }
-	Layer air = AIR_LAYER;
-	
-    return &air;
+	int index = this->GetLayerIndex(pos);
+	if (index == -1) {
+		Layer air = AIR_LAYER;
+		return &air;
+	}
+	return &this->layers[index];
+}
+
+int LayerSet::GetLayerIndex(Coordinate pos) {
+	for (int i = 0; i < this->layers.size(); i++) {
+		if (pos.y < this->layers[i].bottom_depth && pos.y >= this->layers[i].top_depth) {
+			return i;
+		}
+	}
+	return -1;
 }
 
 int LayerSet::Rendering(Window* win, double zoom) {

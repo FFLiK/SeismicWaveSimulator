@@ -1,6 +1,13 @@
 #pragma once
 #include <string>
 
+class RefractionData {
+public:
+	RefractionData();
+	bool critical_refraction_root_wave;
+	double out_direction;
+};
+
 class Coordinate {
 public:
 	double x;
@@ -42,6 +49,8 @@ public:
 	double GetIntensity();
 	void ManipulateIntensity(double coe);
 
+	RefractionData refraction_data;
+
 private:
 	void* previous_layer;
 	double intensity;
@@ -51,4 +60,6 @@ private:
 	double movement_sin;
 
 	double prev_direction;
+
+	double distance;
 };

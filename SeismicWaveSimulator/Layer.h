@@ -24,12 +24,12 @@ private:
 };
 
 class LayerSet {
-private:
+public:
 	vector<Layer> layers;
 
-public:
 	LayerSet(Json::Value &config);
 	Layer* operator[](Coordinate pos);
+	int GetLayerIndex(Coordinate pos);
 
 	int Rendering(Window* win, double zoom);
 };

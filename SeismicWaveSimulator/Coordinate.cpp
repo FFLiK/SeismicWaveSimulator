@@ -59,6 +59,11 @@ Point::Point() {
 	this->intensity = 1.0;
 	this->temp_layer = false;
 	this->previous_layer = nullptr;
+	this->distance = 0;
+	this->prev_direction = -1;
+	this->movement_cos = 0;
+	this->movement_sin = 0;
+	this->refraction_data = RefractionData();
 }
 
 Point::Point(const Point& point) {
@@ -67,6 +72,11 @@ Point::Point(const Point& point) {
 	this->intensity = point.intensity;
 	this->temp_layer = point.temp_layer;
 	this->previous_layer = point.previous_layer;
+	this->distance = point.distance;
+	this->prev_direction = point.prev_direction;
+	this->movement_cos = point.movement_cos;
+	this->movement_sin = point.movement_sin;
+	this->refraction_data = point.refraction_data;
 }
 
 Point::Point(double x, double y, double dir) {
@@ -75,6 +85,11 @@ Point::Point(double x, double y, double dir) {
 	this->intensity = 1.0;
 	this->temp_layer = false;
 	this->previous_layer = nullptr;
+	this->distance = 0;
+	this->prev_direction = -1;
+	this->movement_cos = 0;
+	this->movement_sin = 0;
+	this->refraction_data = RefractionData();
 }
 
 Point::Point(Coordinate& pos, double dir) {
@@ -83,6 +98,11 @@ Point::Point(Coordinate& pos, double dir) {
 	this->temp_layer = false;
 	this->intensity = 1.0;
 	this->previous_layer = nullptr;
+	this->distance = 0;
+	this->prev_direction = -1;
+	this->movement_cos = 0;
+	this->movement_sin = 0;
+	this->refraction_data = RefractionData();
 }
 
 int Point::Move(double magnitude) {
@@ -92,6 +112,7 @@ int Point::Move(double magnitude) {
 		this->movement_sin = sin(this->direction * M_PI);
 	}
     this->position += Coordinate(magnitude * this->movement_cos, magnitude * this->movement_sin);
+	this->distance += magnitude / 10000.0;
 	return 0;
 }
 
@@ -115,9 +136,15 @@ void Point::SetTempLayer() {
 }
 
 double Point::GetIntensity() {
-    return this->intensity;
+	if (!this->distance) return this->intensity;
+    return this->intensity / (1 + this->distance);
 }
 
 void Point::ManipulateIntensity(double coe) {
 	this->intensity *= coe;
+}
+
+RefractionData::RefractionData() {
+	this->critical_refraction_root_wave = false;
+	this->out_direction = 0;
 }
