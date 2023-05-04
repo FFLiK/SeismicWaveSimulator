@@ -5,21 +5,20 @@
 #include <Log.h>
 #include <atomic>
 
-#define SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER 25000
+#define SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER 10000
 #define INTENSITY_THRESHOLD 0.1
 
 #define OCCUR_P_WAVE true
 #define OCCUR_P_REFRACTED_WAVE true
-#define OCCUR_S_WAVE false
-#define OCCUR_S_REFRACTED_WAVE false
+#define OCCUR_S_WAVE true
+#define OCCUR_S_REFRACTED_WAVE true
 
 #define CAL_P_WAVE 1
 #define CAL_S_WAVE 2
 #define CAL_REFRACTED 4
 
 double Expo(double x) {
-	return x;
-	return x == 1 ? 1 : 1 - pow(10, -10 * x);
+	return x == 1 ? 1 : 1 - pow(2, -10 * x);
 }
 
 double SnellLaw(double theta, double v_in, double v_out) {
@@ -76,6 +75,33 @@ int Simulator::OccurEarthquake(Coordinate hypocenter) {
 		new_wave.reset();
 	}
 	#endif
+	{
+		shared_ptr<vector<Point>> new_wave = make_shared<vector<Point>>();
+		#if OCCUR_S_WAVE 
+		for (int i = 0; i < SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER; i++) {
+			new_wave->push_back(Point(hypocenter, (double)i / (double)SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER * 2));
+		}
+		#endif
+		atomic_store(&(this->s_wave), new_wave);
+		new_wave.reset();
+	}
+	#if OCCUR_S_REFRACTED_WAVE 
+	{
+		shared_ptr<vector<Point>> new_wave = make_shared<vector<Point>>();
+		int index = this->layer_set->GetLayerIndex(hypocenter);
+		double angle = 0;
+		for (int i = index + 1; i < this->layer_set->layers.size(); i++) {
+			angle = SnellLaw(0, this->layer_set->layers[i].PWaveVelocity(), this->layer_set->layers[index].PWaveVelocity());
+			new_wave->push_back(Point(hypocenter, angle));
+
+			angle = SnellLaw(1, this->layer_set->layers[i].PWaveVelocity(), this->layer_set->layers[index].PWaveVelocity());
+			new_wave->push_back(Point(hypocenter, angle));
+		}
+
+		atomic_store(&(this->s_refracted_wave), new_wave);
+		new_wave.reset();
+	}
+	#endif
     return 0;
 }
 
@@ -87,7 +113,7 @@ int Simulator::Update(double delta_time) {
 	this->Calculate(CAL_P_WAVE | CAL_REFRACTED, delta_time);
 	#endif
 	#if OCCUR_S_REFRACTED_WAVE
-	this->Calculate(CAL_P_WAVE | CAL_REFRACTED, delta_time);
+	this->Calculate(CAL_S_WAVE | CAL_REFRACTED, delta_time);
 	#endif
     return 0;
 }
@@ -100,7 +126,7 @@ int Simulator::Rendering(Window* win, double zoom) {
 	this->RenderWave(CAL_P_WAVE | CAL_REFRACTED, win, zoom);
 	#endif
 	#if OCCUR_S_REFRACTED_WAVE
-	this->RenderWave(CAL_P_WAVE | CAL_REFRACTED, win, zoom);
+	this->RenderWave(CAL_S_WAVE | CAL_REFRACTED, win, zoom);
 	#endif
 	this->layer_set->Rendering(win, zoom);
 	return 0;
@@ -152,7 +178,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 					new_wave_vec->push_back(new_wave);
 
 					//Create Reflected Wave
-					if (!(wavetype & CAL_REFRACTED)) {
+					if (!(wavetype & CAL_REFRACTED)x) {
 						Point reflected = (*wave)[i];
 						reflected.direction = -reflected.direction + 2.0;
 						reflected.SetTempLayer();
@@ -175,7 +201,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 						refracted.direction = refracted.refraction_data.out_direction;
 						refracted.refraction_data = RefractionData();
 						refracted.SetTempLayer();
-						new_wave_vec_for_cr->push_back(refracted);
+						new_wave_vec->push_back(refracted);
 					}
 					new_wave_vec->push_back((*wave)[i]);
 				}
@@ -183,7 +209,10 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 		}
 		wave.reset();
 		for (register int i = 0; i < new_wave_vec->size(); i++) {
-			double magnitude = (*this->layer_set)[(*new_wave_vec)[i].position]->PWaveVelocity() * delta_time;
+			double velocity = 1;
+			if (wavetype & CAL_P_WAVE) velocity = (*this->layer_set)[(*new_wave_vec)[i].position]->PWaveVelocity();
+			else if (wavetype & CAL_S_WAVE) velocity = (*this->layer_set)[(*new_wave_vec)[i].position]->SWaveVelocity();
+			double magnitude = velocity * delta_time;
 			(*new_wave_vec)[i].Move(magnitude);
 		}
 		if (wavetype & CAL_REFRACTED) {
