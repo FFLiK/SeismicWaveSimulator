@@ -9,12 +9,13 @@
 using namespace std;
 
 class Receiver {
+	vector<Coord> path;
 public:
 	Coord pos;
-	Point record;
-	bool received = false;
-
+	void FindPath(Coord begin, Coord end, double direction, LayerSet layer);
 	int Rendering(Window* win, double zoom, Color::RGB color);
+	bool Received();
+	void Clear();
 };
 
 class Simulator {
@@ -39,4 +40,6 @@ private:
 	void RenderWave(int wavetype, Window* win, double zoom);
 
 	shared_ptr<vector<Receiver>> receiver;
+
+	Coord hypocenter;
 };
