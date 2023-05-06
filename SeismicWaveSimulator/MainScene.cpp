@@ -26,7 +26,12 @@ int MainScene::Rendering() {
 int MainScene::EventProcess(Event::Event& evt) {
 	switch (evt.type) {
 	case Event::MOUSE_UP:
-		this->simulator->OccurEarthquake(Coordinate(evt.mouse_data.x / this->zoom, evt.mouse_data.y / this->zoom));
+		if (evt.mouse_data.mouse_code == Event::LEFT) {
+			this->simulator->OccurEarthquake(Coordinate(evt.mouse_data.x / this->zoom, evt.mouse_data.y / this->zoom));
+		}
+		else if (evt.mouse_data.mouse_code == Event::RIGHT) {
+			this->simulator->InstallReceiver(Coordinate(evt.mouse_data.x / this->zoom, evt.mouse_data.y / this->zoom));
+		}
 		break;
 	case Event::MOUSE_WHEEL:
 		this->zoom *= sqrt(pow(2, evt.wheel_delta));

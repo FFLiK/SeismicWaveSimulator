@@ -1,5 +1,10 @@
 #pragma once
 #include <string>
+#include <vector>
+#include <SDL.h>
+#include "Color.h"
+#include "Window.h"
+#include "Config.h"
 
 class RefractionData {
 public:
@@ -51,6 +56,9 @@ public:
 
 	RefractionData refraction_data;
 
+	void RenderHistory(Window* win, double zoom, Color::RGB color);
+	void AddHistory();
+
 private:
 	void* previous_layer;
 	double intensity;
@@ -62,4 +70,8 @@ private:
 	double prev_direction;
 
 	double distance;
+
+	#if USE_RECEIVER
+	std::vector<Coord> moving_history;
+	#endif
 };
