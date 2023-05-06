@@ -34,7 +34,6 @@ Simulator::Simulator(string config_path) {
     Json::Value config = FileManager::GetJsonFile(config_path);
     layer_set = new LayerSet(config);
 	this->receiver = make_shared<vector<Receiver>>();
-	this->hypocenter = { -1,-1 };
 }
 
 Simulator::~Simulator() {
@@ -45,7 +44,6 @@ Simulator::~Simulator() {
 }
 
 int Simulator::OccurEarthquake(Coordinate hypocenter) {
-	this->hypocenter = hypocenter;
 	{
 		shared_ptr<vector<Point>> new_wave = make_shared<vector<Point>>();
 		#if OCCUR_P_WAVE 
@@ -117,7 +115,7 @@ int Simulator::OccurEarthquake(Coordinate hypocenter) {
 
 	shared_ptr<vector<Receiver>> receiver = atomic_load(&this->receiver);
 	for (int i = 0; i < receiver->size(); i++) {
-		(*receiver)[i].Clear();
+		(*receiver)[i].received = false;
 	}
 	atomic_store(&(this->receiver), receiver);
     return 0;
@@ -143,7 +141,7 @@ int Simulator::InstallReceiver(Coordinate position) {
 	if (chk) {
 		Receiver r;
 		r.pos = position;
-		r.Clear();
+		r.received = false;
 		receiver->push_back(r);
 	}
 	atomic_store(&(this->receiver), receiver);
@@ -193,17 +191,6 @@ int Simulator::Rendering(Window* win, double zoom) {
 		SDL_RenderFillRectF(win->GetRenderer(), &r);
 	}
 
-	/*if (this->hypocenter.x != -1) {
-		Color::RGB color = ColorTable::value.at(ColorTable::HYPOCENTER);
-		SDL_SetRenderDrawColor(win->GetRenderer(), color.r, color.g, color.b, 255);
-		SDL_FRect r;
-		r.x = (this->hypocenter.x - RECEIVER_SIZE) * zoom;
-		r.y = (this->hypocenter.y - RECEIVER_SIZE) * zoom;
-		r.w = RECEIVER_SIZE * 2 * zoom;
-		r.h = RECEIVER_SIZE * 2 * zoom;
-		SDL_RenderFillRectF(win->GetRenderer(), &r);
-	}*/
-
 	SDL_SetRenderDrawColor(win->GetRenderer(), 0, 0, 0, 255);
 	return 0;
 }
@@ -225,13 +212,13 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 		for (register int i = 0; i < wave->size(); i++) {
 			Coord wave_pos = (*wave)[i].position;
 			for (register int j = 0; j < receiver->size(); j++) {
-				if (!(*receiver)[j].Received()) {
+				if (!(*receiver)[j].received) {
 					Coord re_pos = (*receiver)[j].pos;
 					if (wave_pos.x >= re_pos.x - RECEIVER_SIZE && wave_pos.x <= re_pos.x + RECEIVER_SIZE) {
 						if (wave_pos.y >= re_pos.y - RECEIVER_SIZE && wave_pos.y <= re_pos.y + RECEIVER_SIZE) {
-							double dir = (*wave)[i].direction + 1;
-							if (dir >= 2.0) dir -= 2.0;
-							(*receiver)[j].FindPath((*wave)[i].position, this->hypocenter, dir, *(this->layer_set));
+							(*receiver)[j].record = ((*wave)[i]);
+							(*receiver)[j].received = true;
+							(*receiver)[j].record.AddHistory();
 						}
 					}
 				}
@@ -290,6 +277,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 						refracted.direction = refracted.refraction_data.out_direction;
 						refracted.refraction_data = RefractionData();
 						refracted.SetTempLayer();
+						refracted.AddHistory();
 						new_wave_vec->push_back(refracted);
 					}
 					new_wave_vec->push_back((*wave)[i]);
@@ -388,21 +376,16 @@ void Simulator::RenderWave(int wavetype, Window* win, double zoom) {
 	}
 }
 
-void Receiver::FindPath(Coord begin, Coord end, double direction, LayerSet layer) {
-	
-}
-
 int Receiver::Rendering(Window* win, double zoom, Color::RGB color) {
-	if (this->Received()) {
-		//this->record.RenderHistory(win, zoom, color);
+	if (this->received) {
+		this->record.RenderHistory(win, zoom, color);
 	}
+	/*for (int i = 0; i < this->record.size(); i++) {
+		if (i >= 10) break;
+		Color::HSV hsv = color;
+		hsv.v -= i * 10;
+		color = hsv;
+		this->record[i].RenderHistory(win, zoom, color);
+	}*/
 	return 0;
-}
-
-bool Receiver::Received() {
-	return !path.empty();
-}
-
-void Receiver::Clear() {
-	this->path.clear();
 }

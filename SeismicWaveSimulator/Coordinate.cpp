@@ -64,6 +64,10 @@ Point::Point() {
 	this->movement_cos = 0;
 	this->movement_sin = 0;
 	this->refraction_data = RefractionData();
+	#if USE_RECEIVER
+	this->moving_history.clear();
+	#endif
+	this->AddHistory();
 }
 
 Point::Point(const Point& point) {
@@ -77,6 +81,9 @@ Point::Point(const Point& point) {
 	this->movement_cos = point.movement_cos;
 	this->movement_sin = point.movement_sin;
 	this->refraction_data = point.refraction_data;
+	#if USE_RECEIVER
+	this->moving_history = point.moving_history;
+	#endif
 }
 
 Point::Point(double x, double y, double dir) {
@@ -90,6 +97,10 @@ Point::Point(double x, double y, double dir) {
 	this->movement_cos = 0;
 	this->movement_sin = 0;
 	this->refraction_data = RefractionData();
+	#if USE_RECEIVER
+	this->moving_history.clear();
+	#endif
+	this->AddHistory();
 }
 
 Point::Point(Coordinate& pos, double dir) {
@@ -103,6 +114,10 @@ Point::Point(Coordinate& pos, double dir) {
 	this->movement_cos = 0;
 	this->movement_sin = 0;
 	this->refraction_data = RefractionData();
+	#if USE_RECEIVER
+	this->moving_history.clear();
+	#endif
+	this->AddHistory();
 }
 
 int Point::Move(double magnitude) {
@@ -124,6 +139,7 @@ bool Point::LayerChanged(void* layer) {
 		this->temp_layer = false;
 		return false;
 	}
+	if(result) this->AddHistory();
 	return result;
 }
 
@@ -144,8 +160,19 @@ void Point::ManipulateIntensity(double coe) {
 	this->intensity *= coe;
 }
 
+void Point::AddHistory() {
+	#if USE_RECEIVER
+	this->moving_history.push_back(this->position);
+	#endif
+}
+
 void Point::RenderHistory(Window* win, double zoom, Color::RGB color) {
+	#if USE_RECEIVER
 	SDL_SetRenderDrawColor(win->GetRenderer(), color.r, color.g, color.b, 255);
+	for (int i = 0; i < this->moving_history.size() - 1; i++) {
+		SDL_RenderDrawLineF(win->GetRenderer(), this->moving_history[i].x * zoom, this->moving_history[i].y * zoom, this->moving_history[i + 1].x * zoom, this->moving_history[i + 1].y * zoom);
+	}
+	#endif
 }
 
 RefractionData::RefractionData() {
