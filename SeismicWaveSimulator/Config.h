@@ -23,7 +23,7 @@
 
 #define RECEIVER_SIZE 5
 
-#define USE_RECEIVER true
+#define USE_RECEIVER false
 
 #define GRAPH_MODE true
 

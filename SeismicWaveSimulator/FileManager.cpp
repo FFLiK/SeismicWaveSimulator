@@ -1,4 +1,4 @@
-#include <FileManager.h>
+#include <FileIO.h>
 #include <iostream>
 #include <string>
 #include <fstream>
@@ -10,7 +10,7 @@
 #include <shlobj_core.h>
 using namespace std;
 
-std::string FileManager::Location(FileMode f, std::string name, std::string pos) {
+std::string FileIO::Location(FileMode f, std::string name, std::string pos) {
 	std::string loc;
 	loc = name;
 
@@ -40,7 +40,7 @@ std::string FileManager::Location(FileMode f, std::string name, std::string pos)
 	}
 }
 
-Json::Value FileManager::GetJsonFile(std::string location) {
+Json::Value FileIO::GetJsonFile(std::string location) {
 	Log::PrintDebugLog("FileManager", "GetJsonFile", "loc = " + location);
 	Json::Value root;
 	Json::CharReaderBuilder reader;
@@ -56,7 +56,7 @@ Json::Value FileManager::GetJsonFile(std::string location) {
 	return root;
 }
 
-std::string FileManager::OpenFile(FileType type) {
+std::string FileIO::OpenFile(FileType type) {
 	HDC hdc;
 	PAINTSTRUCT ps;
 	OPENFILENAME OFN;

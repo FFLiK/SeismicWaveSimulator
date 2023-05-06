@@ -3,14 +3,14 @@
 #include <SDL_image.h>
 #include <iostream>
 #include <Log.h>
-#include <FileManager.h>
+#include <FileIO.h>
 #include <han2unicode.h>
 
 SDL_Texture *circle, *star;
 
 void TextureManager::InitLoadTextureLibrary(SDL_Renderer *renderer) {
-	circle = LoadImage(FileManager::Location(RES, "circle.img").c_str(), renderer);
-	star = LoadImage(FileManager::Location(RES, "star.img").c_str(), renderer);
+	circle = LoadImage(FileIO::Location(RES, "circle.img").c_str(), renderer);
+	star = LoadImage(FileIO::Location(RES, "star.img").c_str(), renderer);
 	SDL_SetTextureBlendMode(circle, SDL_BLENDMODE_BLEND);
 	SDL_SetTextureBlendMode(star, SDL_BLENDMODE_BLEND);
 }
@@ -145,7 +145,7 @@ SDL_Texture * TextureManager::LoadText(const char* str, SDL_Renderer* renderer, 
 
 	}
 	adr += ".font";
-	adr = FileManager::Location(RES, adr);
+	adr = FileIO::Location(RES, adr);
 	font = TTF_OpenFont(adr.c_str(), size);
 
 	Uint16 unicode[32768];
@@ -170,7 +170,7 @@ SDL_Texture * TextureManager::LoadText(const wstring str, SDL_Renderer* renderer
 	string adr;
 	adr = fontfile_name;
 	adr += ".font";
-	adr = FileManager::Location(RES, adr);
+	adr = FileIO::Location(RES, adr);
 	font = TTF_OpenFont(adr.c_str(), size);
 
 	SDL_Color clr;

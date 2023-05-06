@@ -1,5 +1,5 @@
 #include <Simulator.h>
-#include <FileManager.h>
+#include <FileIO.h>
 #include <ColorTable.h>
 #include <Window.h>
 #include <Log.h>
@@ -31,7 +31,7 @@ double SnellLaw(double theta, double v_in, double v_out) {
 
 Simulator::Simulator(string config_path) {
 	Log::PrintDebugLog("Simulator", "Contructor", "생성자 호출");
-    Json::Value config = FileManager::GetJsonFile(config_path);
+    Json::Value config = FileIO::GetJsonFile(config_path);
     layer_set = new LayerSet(config);
 	this->receiver = make_shared<vector<Receiver>>();
 	this->graph = make_shared<vector<Coord>>();
@@ -150,6 +150,7 @@ int Simulator::InstallReceiver(Coordinate position) {
 		receiver->push_back(r);
 	}
 	atomic_store(&(this->receiver), receiver);
+	receiver.reset();
 	#endif
 	return 0;
 }
@@ -206,6 +207,7 @@ int Simulator::Rendering(Window* win, double zoom) {
 		r.h = RECEIVER_SIZE * 2 * zoom;
 		SDL_RenderFillRectF(win->GetRenderer(), &r);
 	}
+	receiver.reset();
 	#endif
 	SDL_SetRenderDrawColor(win->GetRenderer(), 0, 0, 0, 255);
 	return 0;
@@ -231,7 +233,8 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 			#if GRAPH_MODE
 			if ((*this->layer_set)[(*wave)[i].position]->density == 0) {
 				unsigned long long int t = clock() - this->simulate_start_time;
-				graph->push_back({wave_pos.x, (double)(t / 300)});
+				Coord c = { wave_pos.x, (double)(t / 300) };
+				graph->push_back(c);
 			}
 			#endif
 			#if USE_RECEIVER
@@ -260,7 +263,6 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 					double prev_velocity = 1;
 					if (wavetype & CAL_P_WAVE) velocity = layer->PWaveVelocity(), prev_velocity = previous_layer->PWaveVelocity();
 					else if (wavetype & CAL_S_WAVE) velocity = layer->SWaveVelocity(), prev_velocity = previous_layer->SWaveVelocity();
-
 					double reflection_coefficient = abs((velocity - prev_velocity) / (velocity + prev_velocity));
 					Point new_wave = (*wave)[i];
 					double prev_direction = new_wave.direction;
@@ -281,20 +283,22 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 					new_wave_vec->push_back(new_wave);
 
 					//Create Reflected Wave
-					Point reflected = (*wave)[i];
-					reflected.direction = -reflected.direction + 2.0;
-					reflected.SetTempLayer();
-					reflected.ManipulateIntensity(reflection_coefficient);
-					Layer* is_air = (*this->layer_set)[reflected.position];
-					if (is_air->density == 0) {
-						if (is_air->top_depth) {
-							reflected.position.y = is_air->top_depth - 1;
+					if (!(wavetype & CAL_REFRACTED)) {
+						Point reflected = (*wave)[i];
+						reflected.direction = -reflected.direction + 2.0;
+						reflected.SetTempLayer();
+						reflected.ManipulateIntensity(reflection_coefficient);
+						Layer* is_air = (*this->layer_set)[reflected.position];
+						if (is_air->density == 0) {
+							if (is_air->top_depth) {
+								reflected.position.y = is_air->top_depth - 1;
+							}
+							else {
+								reflected.position.y = is_air->bottom_depth + 1;
+							}
 						}
-						else {
-							reflected.position.y = is_air->bottom_depth + 1;
-						}
+						new_wave_vec->push_back(reflected);
 					}
-					new_wave_vec->push_back(reflected);
 				}
 				else {
 					if ((wavetype & CAL_REFRACTED) && ((*wave)[i].refraction_data.critical_refraction_root_wave)) {
@@ -303,7 +307,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 						refracted.refraction_data = RefractionData();
 						refracted.SetTempLayer();
 						refracted.AddHistory();
-						new_wave_vec->push_back(refracted);
+						new_wave_vec_for_cr->push_back(refracted);
 					}
 					new_wave_vec->push_back((*wave)[i]);
 				}

@@ -3,15 +3,15 @@
 #include <Window.h>
 #include <Scene.h>
 #include <MainScene.h>
-#include <FileManager.h>
+#include <FileIO.h>
 #include <Log.h>
 using namespace std;
 
 int main(int argc, char *argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	string path = FileManager::OpenFile(CONFIG);
+	string path = FileIO::OpenFile(CONFIG);
 
-	Window* win = new Window({"Seismic Wave Simulator", 1280, 720, 60});
+	Window* win = new Window({"Seismic Wave Simulator", 1920, 1080, 60});
 	win->Rendering();
 
 	Scene* scene;

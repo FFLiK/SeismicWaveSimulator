@@ -1,0 +1,207 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Json::OurFeatures" Collapsed="true">
+    <Position X="10.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAEQBAAAAAgQAAAAAAAABAAAAAASMACAAAA=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Json::OurReader" Collapsed="true">
+    <Position X="3.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkAEIgAIAADADBEBAIAAAIASAgIBTUCAACEk4GAgMIo=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Json::OurCharReader" Collapsed="true">
+    <Position X="8.5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAACAAAAAAAAAAAEAAAAAAIAA=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Color::RGB" Collapsed="true">
+    <Position X="10.25" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAEAAAAAAAAAAAAIAQBBAAAAAAA=</HashCode>
+      <FileName>Color.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Color::HSV" Collapsed="true">
+    <Position X="8.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAQJAAAAAAABg=</HashCode>
+      <FileName>Color.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Event::MouseData" Collapsed="true">
+    <Position X="6.75" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAABgAAAAAAA=</HashCode>
+      <FileName>Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Event::Event" Collapsed="true">
+    <Position X="5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAEAAAAAAAAgABAAAAAAAAAAAACAA=</HashCode>
+      <FileName>Event.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="FileIO" Collapsed="true">
+    <Position X="6.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAIABAAAAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileIO.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TextureManager" Collapsed="true">
+    <Position X="5" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAAAAAAAAAAABAQAIAAAAAAA=</HashCode>
+      <FileName>LoadTexture.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Log" Collapsed="true">
+    <Position X="5" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAEAAA=</HashCode>
+      <FileName>Log.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Scene" Collapsed="true">
+    <Position X="0.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AMAAAgMAAAAAUAAAgIACAAAAQAEAAAAAAAQAAAgAQCA=</HashCode>
+      <FileName>Scene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Window" Collapsed="true">
+    <Position X="6.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AkAAAwICAAAAQAgAAAICCAgAAQQQACAAABAACAgAAAA=</HashCode>
+      <FileName>Window.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="MainScene" Collapsed="true">
+    <Position X="0.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAEAAAAAAAAABAACABEAAAAAAAAgAAQAAAAAAAA=</HashCode>
+      <FileName>MainScene.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RefractionData" Collapsed="true">
+    <Position X="8.5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAABAAAAAAAQAAAAIAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Coordinate.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Coordinate" Collapsed="true">
+    <Position X="3.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAABAAAAAAAAQAAAAAAAAAAAAFgAAAAAAA=</HashCode>
+      <FileName>Coordinate.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Point" Collapsed="true">
+    <Position X="5" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAhAAAJgAoAgAAEAgIAAAAEAAChAAAAgABEAAAQA=</HashCode>
+      <FileName>Coordinate.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Layer" Collapsed="true">
+    <Position X="10.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAggAAAAAQAAAICBAAAAAQAEAAQAAAAAAQA=</HashCode>
+      <FileName>Layer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="LayerSet" Collapsed="true">
+    <Position X="3.25" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAAAAAAAACAAAAAAEAAAAAAAAIBAAAAAA=</HashCode>
+      <FileName>Layer.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Receiver" Collapsed="true">
+    <Position X="6.75" Y="2.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAAAAAQAAAAACAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Simulator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Simulator" Collapsed="true">
+    <Position X="3.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACQAAwAAACIAAAAAAAACQQQACCAAAAAADAAgAAAAAQA=</HashCode>
+      <FileName>Simulator.h</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="Json::CommentStyle" Collapsed="true">
+    <Position X="5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Struct Name="Json::BuiltStyledStreamWriter" Collapsed="true">
+    <Position X="3.25" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgIDAAEJASIGAAAABAAAQAAAIAAAAAAAARAQBFAIgBE=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Enum Name="Json::__unnamed_enum_040b_1" Collapsed="true">
+    <Position X="3.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>jsoncpp.cpp</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="ColorTable::ColorType" Collapsed="true">
+    <Position X="5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAQAAAAAEAAAAQAABAAAACAAAAAAAAAAIAAAAAAI=</HashCode>
+      <FileName>ColorTable.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Event::EventType" Collapsed="true">
+    <Position X="6.75" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQAAAAAAAAAAAAAAAQEAAAACAABAAAAAAAABAAABAAA=</HashCode>
+      <FileName>Event.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Event::Mousecode" Collapsed="true">
+    <Position X="5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAABAgAAAAAAAAAAA=</HashCode>
+      <FileName>Event.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FileMode" Collapsed="true">
+    <Position X="8.5" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAIAAAAAAAIAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>FileIO.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="FileType" Collapsed="true">
+    <Position X="10.25" Y="6" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>FileIO.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Font" Collapsed="true">
+    <Position X="3.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>LoadTexture.h</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Malgun Gothic" Size="9" />
+</ClassDiagram>

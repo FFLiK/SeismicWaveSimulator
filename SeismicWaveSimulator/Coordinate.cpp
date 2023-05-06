@@ -48,6 +48,10 @@ Coordinate Coordinate::operator*=(const double operand) {
     return *this;
 }
 
+bool Coordinate::operator==(const Coordinate operand) {
+	return (this->x == operand.x) && (this->y == operand.y);
+}
+
 std::string Coordinate::to_str() {
 	return "(" + to_string(this->x) + ", " + to_string(this->y) + ")";
 }

@@ -7,7 +7,7 @@
 enum FileMode { RES, DAT, EDIT };
 enum FileType { CONFIG };
 
-class FileManager {
+class FileIO {
 public:
 	//내부 주소 반환 함수
 	static std::string Location(FileMode f, std::string name, std::string pos = "");

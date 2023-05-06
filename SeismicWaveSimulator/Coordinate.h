@@ -30,6 +30,8 @@ public:
 	Coordinate operator-=(const Coordinate operand);
 	Coordinate operator*=(const double operand);
 
+	bool operator==(const Coordinate operand);
+
 	std::string to_str();
 };
 

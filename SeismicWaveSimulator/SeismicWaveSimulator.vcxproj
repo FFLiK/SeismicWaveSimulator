@@ -23,7 +23,7 @@
     <ClInclude Include="Config.h" />
     <ClInclude Include="Coordinate.h" />
     <ClInclude Include="Event.h" />
-    <ClInclude Include="FileManager.h" />
+    <ClInclude Include="FileIO.h" />
     <ClInclude Include="han2unicode.h" />
     <ClInclude Include="ColorTable.h" />
     <ClInclude Include="Layer.h" />
@@ -50,6 +50,9 @@
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Simulator.cpp" />
     <ClCompile Include="Window.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -169,6 +172,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <HeapReserveSize>50000000</HeapReserveSize>
     </Link>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

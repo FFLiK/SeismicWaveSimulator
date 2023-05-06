@@ -22,8 +22,8 @@ Layer::Layer(const Layer& layer) {
 	if (this->density == 0) this->p_wave_speed = 0;
 	else this->p_wave_speed = sqrt((this->bulk_modulus + 4.0 / 3.0 * this->shear_modulus) / this->density);
 	
-	if (this->density == 0) this->s_wave_speed;
-	this->s_wave_speed = sqrt(this->shear_modulus / this->density);
+	if (this->density == 0) this->s_wave_speed = 0;
+	else this->s_wave_speed = sqrt(this->shear_modulus / this->density);
 }
 
 double Layer::PWaveVelocity() {
