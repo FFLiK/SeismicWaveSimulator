@@ -5,7 +5,6 @@ namespace ColorTable {
 		{P_WAVE, Color::RGB(145, 176, 255)},
 		{S_WAVE, Color::RGB(255, 145, 182)},
 		{P_REFRACTED_WAVE, Color::RGB(145, 176, 255)},
-		{S_REFRACTED_WAVE, Color::RGB(255, 145, 182)},
-		{RECEIVER, Color::RGB(145, 255, 211)}
+		{S_REFRACTED_WAVE, Color::RGB(255, 145, 182)}
 	};
 }
