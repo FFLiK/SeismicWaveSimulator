@@ -34,6 +34,7 @@ Simulator::Simulator(string config_path) {
     Json::Value config = FileManager::GetJsonFile(config_path);
     layer_set = new LayerSet(config);
 	this->receiver = make_shared<vector<Receiver>>();
+	this->graph = make_shared<vector<Coord>>();
 }
 
 Simulator::~Simulator() {
@@ -44,6 +45,7 @@ Simulator::~Simulator() {
 }
 
 int Simulator::OccurEarthquake(Coordinate hypocenter) {
+	simulate_start_time = clock();
 	{
 		shared_ptr<vector<Point>> new_wave = make_shared<vector<Point>>();
 		#if OCCUR_P_WAVE 
@@ -118,6 +120,9 @@ int Simulator::OccurEarthquake(Coordinate hypocenter) {
 		(*receiver)[i].received = false;
 	}
 	atomic_store(&(this->receiver), receiver);
+
+	shared_ptr<vector<Coord>> graph = make_shared<vector<Coord>>();
+	atomic_store(&(this->graph), graph);
     return 0;
 }
 
@@ -163,6 +168,17 @@ int Simulator::Update(double delta_time) {
 }
 
 int Simulator::Rendering(Window* win, double zoom) {
+	#if GRAPH_MODE
+	shared_ptr<vector<Coord>> graph = atomic_load(&this->graph);
+	SDL_SetRenderDrawColor(win->GetRenderer(), 255, 255, 255, 255);
+	SDL_RenderDrawLine(win->GetRenderer(), 30, 30, win->GetWindowData().width, 30);
+	SDL_RenderDrawLine(win->GetRenderer(), 30, 30, 30, win->GetWindowData().height);
+	Color::RGB color = ColorTable::value.at(ColorTable::GRAPH);
+	SDL_SetRenderDrawColor(win->GetRenderer(), color.r, color.g, color.b, 255);
+	for (int i = 0; i < this->graph->size(); i++) {
+		SDL_RenderDrawPointF(win->GetRenderer(), (*this->graph)[i].x * zoom + 30, (*this->graph)[i].y * zoom + 30);
+	}
+	#else
 	this->RenderWave(CAL_P_WAVE, win, zoom);
 	this->RenderWave(CAL_S_WAVE, win, zoom);
 
@@ -190,7 +206,7 @@ int Simulator::Rendering(Window* win, double zoom) {
 		r.h = RECEIVER_SIZE * 2 * zoom;
 		SDL_RenderFillRectF(win->GetRenderer(), &r);
 	}
-
+	#endif
 	SDL_SetRenderDrawColor(win->GetRenderer(), 0, 0, 0, 255);
 	return 0;
 }
@@ -207,10 +223,18 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 	}
 	if (wave) {
 		shared_ptr<vector<Receiver>> receiver = atomic_load(&this->receiver);
+		shared_ptr<vector<Coord>> graph = atomic_load(&this->graph);
 		shared_ptr<vector<Point>> new_wave_vec = make_shared<vector<Point>>();
 		shared_ptr<vector<Point>> new_wave_vec_for_cr = make_shared<vector<Point>>();
 		for (register int i = 0; i < wave->size(); i++) {
 			Coord wave_pos = (*wave)[i].position;
+			#if GRAPH_MODE
+			if ((*this->layer_set)[(*wave)[i].position]->density == 0) {
+				unsigned long long int t = clock() - this->simulate_start_time;
+				graph->push_back({wave_pos.x, (double)(t / 300)});
+			}
+			#endif
+			#if USE_RECEIVER
 			for (register int j = 0; j < receiver->size(); j++) {
 				if (!(*receiver)[j].received) {
 					Coord re_pos = (*receiver)[j].pos;
@@ -223,6 +247,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 					}
 				}
 			}
+			#endif
 
 			Layer* layer = (*this->layer_set)[(*wave)[i].position];
 			if ((*wave)[i].position.x >= 0 &&
@@ -325,7 +350,8 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 			else if (wavetype & CAL_S_WAVE) atomic_store(&this->s_wave, new_wave_vec);
 		}
 		atomic_store(&this->receiver, receiver);
-
+		atomic_store(&this->graph, graph);
+		graph.reset();
 		new_wave_vec.reset();
 		new_wave_vec_for_cr.reset();
 		receiver.reset();

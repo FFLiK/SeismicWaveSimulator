@@ -39,4 +39,8 @@ private:
 	void RenderWave(int wavetype, Window* win, double zoom);
 
 	shared_ptr<vector<Receiver>> receiver;
+
+	shared_ptr<vector<Coord>> graph;
+
+	unsigned long long int simulate_start_time = 0;
 };

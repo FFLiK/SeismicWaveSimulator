@@ -25,4 +25,6 @@
 
 #define USE_RECEIVER true
 
+#define GRAPH_MODE true
+
 //==========================================
