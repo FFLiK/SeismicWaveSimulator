@@ -31,8 +31,11 @@ double SnellLaw(double theta, double v_in, double v_out) {
 
 Simulator::Simulator(string config_path) {
 	Log::PrintDebugLog("Simulator", "Contructor", "생성자 호출");
-    Json::Value config = FileIO::GetJsonFile(config_path);
-    layer_set = new LayerSet(config);
+	Json::Value config;
+	#if !INF_LAYER
+	config = FileIO::GetJsonFile(config_path);
+	#endif
+	layer_set = new LayerSet(config);
 	this->receiver = make_shared<vector<Receiver>>();
 	this->graph = make_shared<vector<Coord>>();
 }
@@ -189,8 +192,9 @@ int Simulator::Rendering(Window* win, double zoom) {
 	#if OCCUR_S_REFRACTED_WAVE
 	this->RenderWave(CAL_S_WAVE | CAL_REFRACTED, win, zoom);
 	#endif
+	#if !INF_LAYER
 	this->layer_set->Rendering(win, zoom);
-
+	#endif
 	shared_ptr<vector<Receiver>> receiver = atomic_load(&this->receiver);
 	for (int i = 0; i < receiver->size(); i++) {
 		Color::RGB color = ColorTable::value.at(ColorTable::RECEIVER);
@@ -279,10 +283,13 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 							new_wave.refraction_data.out_direction = 2.0 - prev_direction;
 						}
 					}
+					#if !SIMPLE_CRITICAL_REFRACTION
 					new_wave.ManipulateIntensity(1 - reflection_coefficient);
+					#endif
 					new_wave_vec->push_back(new_wave);
 
 					//Create Reflected Wave
+					#if !SIMPLE_CRITICAL_REFRACTION
 					if (!(wavetype & CAL_REFRACTED)) {
 						Point reflected = (*wave)[i];
 						reflected.direction = -reflected.direction + 2.0;
@@ -299,6 +306,7 @@ void Simulator::Calculate(int wavetype, double delta_time) {
 						}
 						new_wave_vec->push_back(reflected);
 					}
+					#endif
 				}
 				else {
 					if ((wavetype & CAL_REFRACTED) && ((*wave)[i].refraction_data.critical_refraction_root_wave)) {

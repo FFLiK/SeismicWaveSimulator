@@ -35,6 +35,26 @@ double Layer::SWaveVelocity() {
 }
 
 LayerSet::LayerSet(Json::Value& config) {
+	#if INF_LAYER
+	int num = 500;
+	int delta = 1080 / num + 1;
+	for (int i = 0; i < num; i++) {
+		Layer lay;
+		lay.bulk_modulus = (i + 1) * (i + 1);
+		lay.shear_modulus = 0;
+		lay.density = 1000;
+		lay.top_depth = i * delta;
+		lay.bottom_depth = (i + 1) * delta;
+		this->layers.push_back(lay);
+	}
+	Layer lay;
+	lay.bulk_modulus = (num + 1) * (num + 1);
+	lay.shear_modulus = 0;
+	lay.density = 1000;
+	lay.top_depth = num * delta;
+	lay.bottom_depth = numeric_limits<double>::infinity();
+	this->layers.push_back(lay);
+	#else
 	this->layers.clear();
     double prev_depth = 0.0;
     if (config.isMember("Layer")) {
@@ -58,6 +78,7 @@ LayerSet::LayerSet(Json::Value& config) {
     else {
         Log::PrintSystemLog("Layers does not exist.");
     }
+	#endif
 }
 
 Layer* LayerSet::operator[](Coordinate pos) {

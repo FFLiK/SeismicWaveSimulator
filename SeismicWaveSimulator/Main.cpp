@@ -9,8 +9,10 @@ using namespace std;
 
 int main(int argc, char *argv[]) {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	string path = FileIO::OpenFile(CONFIG);
-
+	string path;
+	#if !INF_LAYER
+	path = FileIO::OpenFile(CONFIG);
+	#endif
 	Window* win = new Window({"Seismic Wave Simulator", 1920, 1080, 60});
 	win->Rendering();
 
