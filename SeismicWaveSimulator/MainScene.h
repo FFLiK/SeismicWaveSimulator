@@ -18,4 +18,3 @@ private:
 	double zoom;
 	double velocity;
 };
-

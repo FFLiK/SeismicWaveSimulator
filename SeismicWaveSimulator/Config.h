@@ -7,10 +7,10 @@
 #define Debug true
 #define Version 1.0
 
-#define SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER 10000
+#define SEISMIC_WAVE_INITIAL_PARTICLE_NUMBER 50000
 #define INTENSITY_THRESHOLD 0.1
 
-#define OCCUR_P_WAVE false
+#define OCCUR_P_WAVE true
 #define OCCUR_P_REFRACTED_WAVE true
 #define OCCUR_S_WAVE false
 #define OCCUR_S_REFRACTED_WAVE false
@@ -23,12 +23,12 @@
 
 #define RECEIVER_SIZE 5
 
-#define USE_RECEIVER true
+#define USE_RECEIVER false
 
 #define GRAPH_MODE false
 
-#define INF_LAYER true
+#define INF_LAYER false
 
-#define SIMPLE_CRITICAL_REFRACTION true
+#define SIMPLE_CRITICAL_REFRACTION false
 
 //==========================================
