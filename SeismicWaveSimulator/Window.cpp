@@ -89,7 +89,6 @@ void Window::__RenderingProcess__() {
 			for (int i = this->scene_list.size() - 1; i >= 0; i--) {
 				this->scene_list[i]->Rendering();
 			}
-			SDL_SetRenderDrawColor(this->ren, 0, 0, 0, 0);
 			SDL_RenderPresent(this->ren);
 			SDL_Delay(1000 / this->fps - 1);
 		}

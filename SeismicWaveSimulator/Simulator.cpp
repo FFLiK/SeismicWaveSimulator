@@ -213,7 +213,7 @@ int Simulator::Rendering(Window* win, double zoom) {
 	}
 	receiver.reset();
 	#endif
-	SDL_SetRenderDrawColor(win->GetRenderer(), 0, 0, 0, 255);
+	SDL_SetRenderDrawColor(win->GetRenderer(), (clock() - this->simulate_start_time) % 255, 0, 0, 255);
 	return 0;
 }
 
