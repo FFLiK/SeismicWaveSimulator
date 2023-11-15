@@ -4,6 +4,7 @@
 * text=auto
 
 *.h linguist-language=cpp
+*.cmake linguist-vendored
 ###############################################################################
 # Set default behavior for command prompt diff.
 #
